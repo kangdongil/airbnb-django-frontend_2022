@@ -1,0 +1,67 @@
+additionalRepositories:
+  - url: https://github.com/kangdongil/airbnb_backend_221024
+    checkoutLocation: backend
+
+tasks:
+  - name: django-server
+    before: |
+      cd ../backend
+    init: |
+      gp sync-await prebuild
+    command: |
+      poetry run python manage.py runserver
+
+  - name: backend
+    before: |
+      cd ../backend
+    init: |
+      if [ ! -f pyproject.toml ]; then
+      poetry init -n
+      poetry add django
+      poetry run django-admin startproject config .
+      sed -i "s/ALLOWED_HOSTS = \[\]/ALLOWED_HOSTS = \[\"localhost\"\]\nCSRF_TRUSTED_ORIGINS = \[\"https:\/\/*.ws-us72.gitpod.io\"\]/g" config/settings.py
+      sed -i "s/UTC/Asia\/Seoul/g" config/settings.py
+      else
+      poetry update
+      fi
+      if [ ! -f db.sqlite3 ]; then
+      poetry run python manage.py migrate
+      clear && echo "Create Admin account:"
+      poetry run python manage.py createsuperuser
+      fi
+      if [ ! -f .env ]; then
+      touch .env
+      echo 'SECRET_KEY="django-insecure-ch4^&1og*8u&irs+4911m^m44!e7em+(%4x@!$qcsovtft&_i&"' >> .env
+      echo 'GITPOD_SERVER_DOMAIN="https://*.ws-us77.gitpod.io"' >> .env
+      fi
+    command: |
+      gp sync-done prebuild
+      clear && gp ports await 8000
+      gp preview $(gp url 8000) --external
+  - name: react-server
+    init: |
+      nvm install --lts
+      [ -d /frontend ] || mkdir frontend
+    command: |
+      cd frontend
+      if [ ! -f package.json ]; then
+      npx --yes create-react-app . --template @chakra-ui/typescript
+      npm i react-router-dom 
+      npm i @tanstack/react-query axios @tanstack/react-query-devtools
+      fi
+      clear && npm start
+  - name: frontend
+
+ports:
+  - name: Django Backend
+    port: 8000
+    visibility: private
+    onOpen: notify
+  - name: React Frontend
+    port: 3000
+    visibility: private
+    onOpen: notify
+
+vscode:
+  extensions:
+    - ms-python.python
