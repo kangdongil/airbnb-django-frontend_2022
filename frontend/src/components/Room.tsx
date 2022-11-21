@@ -7,7 +7,7 @@ export default function Room() {
     const gray = useColorModeValue("gray.600", "gray.300");
     return (
         <VStack align={"flex-start"}>
-            <Box position="relative" overflow={"hidden"} mb={2} rounded="3xl">
+            <Box position="relative" overflow={"hidden"} mb={2} rounded="2xl">
                 <Image
                     minH="280"
                     src={ROOM_PHOTO_URL}
@@ -21,7 +21,7 @@ export default function Room() {
                     <Text as="b" noOfLines={1} fontSize="md">
                         {ROOM_ADDRESS}
                     </Text>
-                    <HStack spacing={1}>
+                    <HStack _hover={{ color: "red.500", }} spacing={1}>
                         <FaStar size={15} />
                         <Text>5.0</Text>
                     </HStack>
