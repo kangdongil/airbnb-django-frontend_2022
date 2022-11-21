@@ -8,6 +8,14 @@
 - TanStack-Query
     - `npm i @tanstack/react-query axios @tanstack/react-query-devtools`
 
+### 0.1 React 기초 지식
+- Component
+- JSX
+- Prop
+
+### 0.2 TypeScript + React
+- Interface
+
 ## 1.0 Create-React-App
 ### 1.1 CRA 프로젝트를 Optimize하기
 1. `src/`
@@ -127,8 +135,11 @@
 - `rem`: 1rem은 16px과 같다(=4)
   - 16px인 spacing: `spacing={2}`
   - 48px인 fontsize: `size={"48"}`
-#### 3.2.1 Layout 관련 Component
+#### 3.2.1 Data Display 관련
+- `<Divider />`: HTML <hr />과 유사함.
+#### 3.2.2 Layout 관련 Component
 - `<Box>`
+  - HTML `<div>`와 같다. 모든 Component와 공통되는 속성을 가진다.
   - `w`(=`width`) / `h`(=`height`)
   - `minW`(=`minWidth`) / `minH`(=`minHeight`)
   - `p`(padding) / `px` / `py`
@@ -142,10 +153,11 @@
   - `flex-direction`이 적용된 `Stack`
   - Stack 안 Element들간에는 여백이 기본으로 적용되어있다
   - `spacing`
-#### 3.2.2 Form 관련 Component
+#### 3.2.3 Form 관련 Component
 - Element의 형태와 관련된 Component
 - `<Button>`
   - `variant`: Button 스타일
+    - `solid` / `outline` / `ghost` / `link`
   - `colorScheme`: Button 색조
   - `size`: Button 크기
   - `leftIcon`: 왼쪽 아이콘 삽입
@@ -175,11 +187,11 @@
   - 특정 Input관련된 Container들을 묶는 역할.
 - `<InputLeftElement>`
   - `children`: Input 좌측에 들어갈 Element로 보통 Icon이다
-#### 3.2.3 Overlay 관련 Component
+#### 3.2.4 Overlay 관련 Component
 - 브라우저 화면을 차지하는 요소와 관련된 Component
 - `<Modal>`
 
-##### 3.2.3.1 Modal
+##### 3.2.4.1 Modal
 - `<Modal>`
   - `isOpen`: Modal의 초기상태. `True` / `False`
   - `onClose`: Modal을 close하는 function
@@ -191,6 +203,11 @@
 
     const { isOpen, onClose, onOpen } = useDisclosure();
     ...
+  ```
+  - 여러 Modal을 사용하는 경우, 각 함수 이름을 다르게 선언한다.
+  ```javascript
+    const { isOpen: isLoginOpen, onClose:onLoginClose,
+      onOpen: onLoginOpen } = useDisclosure();
   ```
 - `<ModalOverlay>`: Modal을 부각시키도록 주변부를 어둡게 함
 - `<ModalContent>`: Modal의 Body
