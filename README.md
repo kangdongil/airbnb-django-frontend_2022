@@ -139,6 +139,8 @@
     - `justify`(=`justifyContent`)
     - `align`(=`alignItems`)
 - `<VStack>` / `<HStack>`
+  - `flex-direction`이 적용된 `Stack`
+  - Stack 안 Element들간에는 여백이 기본으로 적용되어있다
   - `spacing`
 #### 3.2.2 Form 관련 Component
 - Element의 형태와 관련된 Component
@@ -149,3 +151,49 @@
   - `leftIcon`: 왼쪽 아이콘 삽입
   - `isLoading`
     - `loadingText`
+- `<IconButton>`
+  - `<Button>`은 상속받음
+  - `icon`: 사용할 Icon Component
+  - `aria-label`: ScreenReader 사용자를 위한 내용
+- `<Input>`
+  - HTML <input> prop을 그대로 가짐.
+    - `placeholder`
+  ```javascript
+  <InputGroup>
+    <InputLeftElement children={
+      <Box color="gray.500">
+        <FaUser />
+      </Box>
+    }>
+    <Input
+      variant={"filled"}
+      placeholder="username"
+    />
+  </InputGroup>
+  ```
+- `<InputGroup>`
+  - 특정 Input관련된 Container들을 묶는 역할.
+- `<InputLeftElement>`
+  - `children`: Input 좌측에 들어갈 Element로 보통 Icon이다
+#### 3.2.3 Overlay 관련 Component
+- 브라우저 화면을 차지하는 요소와 관련된 Component
+- `<Modal>`
+
+##### 3.2.3.1 Modal
+- `<Modal>`
+  - `isOpen`: Modal의 초기상태. `True` / `False`
+  - `onClose`: Modal을 close하는 function
+  - `motionPreset`: Modal Animation 방식(기본값: `scale`)
+- `useDisclosure();`
+  - modal의 state를 변경해주는 function을 제공함.
+  ```javascript
+    import { useDisclosure } from '@chakra-ui/react';
+
+    const { isOpen, onClose, onOpen } = useDisclosure();
+    ...
+  ```
+- `<ModalOverlay>`: Modal을 부각시키도록 주변부를 어둡게 함
+- `<ModalContent>`: Modal의 Body
+- `<ModalHeader>`: Modal의 Header
+- `<ModalFooter>`: Modal의 Footer
+- `<ModalCloseButton>`: Modal 우상측의 종료버튼
