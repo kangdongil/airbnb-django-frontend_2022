@@ -214,3 +214,61 @@
 - `<ModalHeader>`: Modal의 Header
 - `<ModalFooter>`: Modal의 Footer
 - `<ModalCloseButton>`: Modal 우상측의 종료버튼
+
+### 3.3 Chakra.ui Dark Mode 적용하기
+1. `src/`에 `theme.ts` 만들기
+  - 기존 theme에 `initialColorMode`와 `useSystemColorMode` 설정값을 `extendTheme`하여 넣는다.
+    - `initialColorMode`에서 설정한 값은 브라우저의 `LocalStorage`에 저장된다
+    - `light` / `dark` / `system`
+  ```javascript
+    import { extendTheme, type ThemeConfig } from "@chakra-ui/react"
+
+    const config:ThemeConfig = {
+      initialColorMode: "light",
+      useSystemColorMode: false,
+    };
+
+    const thee = extendTheme({ config });
+
+    export default theme;
+  ```
+2. `ChakraProvider`에 `theme`을 prop으로 넘긴다
+  ```javascript
+  import theme from "./theme";
+
+  <ChakraProvider theme={theme}>
+  ```
+3. client가 마지막으로 한 ColorMode을 설정을 `<ColorModeScript>`로 불러온다.
+  ```javascript
+  <ChakraProvider theme={theme}>
+    <ColorModeScript initialColorMode={theme.config.initialColorMode}> />
+  ```
+4. `colorMode`를 바꾸려면 `toggleColorMode`을 실행한다
+  ```javascript
+  const { toggleColorMode } = useColorMode();
+
+  <IconButton
+    onClick={toggleColorMode}
+    ...
+  />
+  ```
+5. `colorMode`에 따라 element가 바뀌길 원한다면 `colorMode`를 조건으로 두거나 `useColorModeValue`에 두가지 상태를 설명한다.
+  - `colorMode`를 조건으로 두기
+  ```javascript
+  const { colorMode } = useColorMode();
+
+  icon={colorMode === "light" ? <FaMoon /> : <FaSun />}
+  ```
+  - `useColorModeValue`로 `colorMode`에 따른 element 변화주기
+  ```javascript
+  const logoColor = useColorModeValue([LIGHT_MODE], [DARK_MODE]);
+  
+  <Box color={logoColor}>
+  ...
+  ```
+  - `Component`를 `useColorModeValue`를 사용하는 경우 다음과 같이 작성한다.
+    - 변수명은 대문자로 시작해야 한다
+    - 컴포넌트는 태그 없이 이름을 적는다
+  ```javascript
+  const Icon = useColorModeValue(FaMoon, FaSun);
+  ```
