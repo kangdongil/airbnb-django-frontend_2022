@@ -149,10 +149,17 @@
   - flex
     - `justify`(=`justifyContent`)
     - `align`(=`alignItems`)
-- `<VStack>` / `<HStack>`
+    - `direction`(=`flexDirection`)
+- `<Stack>` / `<VStack>` / `<HStack>`
   - `flex-direction`이 적용된 `Stack`
   - Stack 안 Element들간에는 여백이 기본으로 적용되어있다
+  - ResponsiveDesign으로 인해 flex-direction이 바뀐다면 그냥 `<Stack>`을 사용한다
   - `spacing`
+- `<Grid>`
+  - `display: grid`한 `<div>`이다
+  - `templateColumns`
+    - 직접 지정해주거나,(`"5fr 1fr"`)
+    - repeact를 활용한다 (`"repeact(5, 1fr)"`)
 #### 3.2.3 Form 관련 Component
 - Element의 형태와 관련된 Component
 - `<Button>`
@@ -214,6 +221,11 @@
 - `<ModalHeader>`: Modal의 Header
 - `<ModalFooter>`: Modal의 Footer
 - `<ModalCloseButton>`: Modal 우상측의 종료버튼
+#### 3.2.5 기타 Component
+- `<Image>`
+  - HTML `<img>` prop을 그대로 가짐. 
+
+
 
 ### 3.3 Chakra.ui Dark Mode 적용하기
 1. `src/`에 `theme.ts` 만들기
@@ -271,4 +283,16 @@
     - 컴포넌트는 태그 없이 이름을 적는다
   ```javascript
   const Icon = useColorModeValue(FaMoon, FaSun);
+  ```
+
+### 3.4 Chakra.ui Responsive Design 적용하기
+- 특정 Element를 반응형으로 다루고 싶다면, `{{}}` 안에 size마다 값을 어떻게 다루고 싶은지 표현한다
+  ```javascript
+    spacing={{
+      base: ~,
+      sm: ~,
+      md: ~,
+      xl: ~,
+      "2xl": ~,
+    }}
   ```
