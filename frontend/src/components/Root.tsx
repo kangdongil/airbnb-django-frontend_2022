@@ -1,5 +1,5 @@
-import { Box, Button, HStack, IconButton, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useDisclosure, VStack } from "@chakra-ui/react";
-import { FaAirbnb, FaLock, FaMoon, FaUserNinja } from "react-icons/fa";
+import { Box, Button, Divider, HStack, IconButton, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, Text, useDisclosure, VStack } from "@chakra-ui/react";
+import { FaAirbnb, FaComment, FaGithub, FaLock, FaMoon, FaUserNinja } from "react-icons/fa";
 import { Outlet } from "react-router-dom";
 
 export default function Root() {
@@ -58,10 +58,37 @@ export default function Root() {
                                 />
                             </InputGroup>
                         </VStack>
-                    </ModalBody>
-                    <ModalFooter>
                         <Button colorScheme={"red"} w="100%">Log in</Button>
-                    </ModalFooter>
+                        <Box mb={4}>
+                            <HStack my={8}>
+                                <Divider />
+                                <Text 
+                                    textTransform={"uppercase"}
+                                    color="gray.500"
+                                    fontSize="xs"
+                                    as="b">
+                                        Or
+                                </Text>
+                                <Divider />
+                            </HStack>
+                            <VStack>
+                                <Button
+                                    w="100%"
+                                    leftIcon={<FaGithub />}
+                                    colorScheme={"telegram"}
+                                >
+                                    Continue with Github
+                                </Button>
+                                <Button
+                                    w="100%"
+                                    leftIcon={<FaComment />}
+                                    colorScheme={"yellow"}
+                                >
+                                    Continue with Kakao
+                                </Button>
+                            </VStack>
+                        </Box>
+                    </ModalBody>
                 </ModalContent>
             </Modal>
         </HStack>
