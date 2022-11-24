@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Heading, Image, Skeleton } from "@chakra-ui/react";
+import { Avatar, Box, Grid, GridItem, Heading, HStack, Image, Skeleton, Text, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { IRoomDetail } from "../types";
@@ -48,5 +48,29 @@ export default function RoomDetail() {
                 </GridItem>
             ))}
         </Grid>
+        <HStack
+            w={"40%"}
+            justify={"space-between"}
+            mt={10}
+        >
+            <VStack>
+                <Heading fontSize={"2xl"}>
+                    House hosted by {data?.owner.name}
+                </Heading>
+                <HStack
+                    justify={"flex-start"}
+                    w="100%"
+                >
+                    <Text>{data?.toilets} toilet{data?.toilets === 1 ? "" : "s"}</Text>
+                    <Text>∙</Text>
+                    <Text>{data?.rooms} room{data?.toilets === 1 ? "" : "s"}</Text>
+                </HStack>
+            </VStack>
+            <Avatar
+                name={data?.owner.name}
+                size={"xl"}
+                src={data?.owner.avatar}
+            />
+        </HStack>
     </Box>;
 }
