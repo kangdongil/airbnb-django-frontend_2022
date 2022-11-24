@@ -41,3 +41,10 @@ export interface IRoomDetail extends IRoomList {
     is_liked: boolean;
     photos: IRoomPhoto[];
 }
+
+export interface IReview {
+    payload: string;
+    rating: number;
+    user: IRoomOwner;
+    
+}
