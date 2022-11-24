@@ -29,20 +29,22 @@ export default function RoomDetail() {
             templateColumns={"repeat(4, 1fr)"}
             gap={3}
         >
-            {data?.photos.slice(0, 5).map(
-                (photo, index) => (
+            {[0, 1, 2, 3, 4].map(
+                (index) => (
                 <GridItem
-                    key={photo.pk}
+                    key={index}
                     overflow={"hidden"}
                     colSpan={index === 0 ? 2:1}
                     rowSpan={index === 0 ? 2:1}
                 >
-                    <Image
-                        w="100%"
-                        h="100%"
-                        src={photo.file}
-                        objectFit={"cover"}
-                    />
+                    <Skeleton isLoaded={!isLoading} h="100%" w="100%">
+                        <Image
+                            w="100%"
+                            h="100%"
+                            src={data?.photos[index].file}
+                            objectFit={"cover"}
+                        />
+                    </Skeleton>
                 </GridItem>
             ))}
         </Grid>
