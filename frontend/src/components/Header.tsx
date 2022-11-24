@@ -1,6 +1,7 @@
-import { Avatar, Box, Button, HStack, IconButton, LightMode, Stack, useColorMode, useColorModeValue, useDisclosure } from "@chakra-ui/react";
+import { Avatar, Box, Button, HStack, IconButton, LightMode, Menu, MenuButton, MenuItem, MenuList, Stack, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
 import useUser from "../lib/useUser";
+import { logOut } from "../routes/api";
 import LoginModal from "./LoginModal";
 import SignUpModal from "./SignUpModal";
 
@@ -13,6 +14,25 @@ export default function Header() {
     const { toggleColorMode } = useColorMode();
     const logoColor = useColorModeValue("red.500", "red.300");
     const Icon = useColorModeValue(FaMoon, FaSun);
+    const toast = useToast();
+    const onLogOut = async() => {
+        // const data = await logOut();
+        const toastId = toast({
+            title: "Good Bye",
+            description: "Sad to see you go :(",
+            status: "info",
+            position: "top-right",
+            isClosable: true,
+        })
+        setTimeout(() => {
+            toast.update(toastId, {
+                status: "success",
+                title:"Done!",
+                description: "See you later!",
+                isClosable: true,
+                })
+            }, 5000)
+    }
     return(
         <Stack 
             justify={"space-between"}
@@ -52,11 +72,22 @@ export default function Header() {
                         </LightMode>
                     </>
                     ) : (
-                        <Avatar
-                            name={user?.name}
-                            src={user?.avatar}
-                            size={"md"}
-                        />
+                        <Menu>
+                            <MenuButton>
+                                <Avatar
+                                    name={user?.name}
+                                    src={user?.avatar}
+                                    size={"md"}
+                                />
+                            </MenuButton>
+                            <MenuList>
+                                <MenuItem
+                                    onClick={onLogOut}
+                                >
+                                    Log Out
+                                </MenuItem>
+                            </MenuList>
+                        </Menu>
                     )
                 ) : null }
             </HStack>
