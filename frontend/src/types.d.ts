@@ -46,5 +46,5 @@ export interface IReview {
     payload: string;
     rating: number;
     user: IRoomOwner;
-    
+    created_at: string;
 }

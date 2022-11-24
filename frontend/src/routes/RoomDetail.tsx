@@ -1,4 +1,4 @@
-import { Avatar, Box, Grid, GridItem, Heading, HStack, Image, Skeleton, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Box, Container, Grid, GridItem, Heading, HStack, Image, Skeleton, Text, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
@@ -90,7 +90,7 @@ export default function RoomDetail() {
             />
         </HStack>
         <Box mt={10}>
-            <Heading fontSize={"2xl"}>
+            <Heading mb={5} fontSize={"2xl"}>
                 <HStack>
                     <FaStar /> <Text>{data?.rating}</Text>
                     <Text>∙</Text>
@@ -99,6 +99,38 @@ export default function RoomDetail() {
                     </Text>
                 </HStack>
             </Heading>
+            <Container
+                mt={16}
+                marginX="none"
+                maxW="container.lg"
+            >
+                <Grid
+                    templateColumns={"1fr 1fr"}
+                    gap={10}
+                >
+                    {reviewsData?.map((review, index) => (
+                        <VStack align={"flex-start"} key={index}>
+                            <HStack>
+                                <Avatar
+                                    name={review.user.name}
+                                    src={review.user.avatar}
+                                    size="md"
+                                />
+                                <VStack
+                                    align={"flex-start"}
+                                    spacing={0}
+                                >
+                                    <Heading fontSize={"md"}>
+                                        {review.user.name}
+                                    </Heading>
+                                    <Text>{review.created_at}</Text>
+                                </VStack>
+                            </HStack>
+                            <Text>{review.payload}</Text>
+                        </VStack>
+                    ))}
+                </Grid>
+            </Container>
         </Box>
     </Box>;
 }
