@@ -296,3 +296,6 @@
       "2xl": ~,
     }}
   ```
+
+### 20.4 CSRF
+`npm i js-cookie && npm i @types/js-cookie -D`
