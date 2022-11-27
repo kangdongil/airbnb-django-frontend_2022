@@ -19,6 +19,8 @@ export default function SocialLogin() {
                 <Button
                     w="100%"
                     leftIcon={<FaGithub />}
+                    as="a"
+                    href="https://github.com/login/oauth/authorize?client_id=1bd2d388cbbcf713de7b&scope=read:user,user:email"
                 >
                     Continue with Github
                 </Button>
