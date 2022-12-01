@@ -1,4 +1,4 @@
-import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react";
+import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaLock, FaUserNinja } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
@@ -12,17 +12,27 @@ export default function LoginModal({ isOpen, onClose }:
     LoginModalProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [usernameError, setUsernameError] = useState("");
     const onChange = (event:React.SyntheticEvent<HTMLInputElement>) => {
         const { name, value } = event.currentTarget;
-        if (name === "username") {
-            setUsername(value);
-        } else if(name === "password") {
-            setPassword(value);
+        switch (name) {
+            case "username":
+                setUsername(value);
+                break;
+            case "password":
+                setPassword(value);
+                break;
         }
     }
     const onSubmit = (event:React.SyntheticEvent<HTMLFormElement>) => {
         event.preventDefault();
-        
+        setUsernameError("");
+        if(username.length > 20) {
+            setUsernameError(
+                "Username should be shorter than 20 character."
+            )
+        }
+        // console.log(username, password);
     }
     return(
         <Modal
@@ -54,6 +64,15 @@ export default function LoginModal({ isOpen, onClose }:
                                 placeholder="Username"
                             />
                         </InputGroup>
+                        { usernameError ? (
+                            <Text
+                                w="100%"
+                                fontSize="sm"
+                                color="red"
+                            >
+                                {usernameError}
+                            </Text>
+                        ) : ""}
                         <InputGroup>
                             <InputLeftElement children={
                                 <Box color="gray.500">
