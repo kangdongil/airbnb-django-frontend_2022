@@ -22,7 +22,7 @@ export default function Header() {
             title: "Good Bye",
             description: "Sad to see you go :(",
             status: "info",
-            position: "top-right",
+            position: "bottom-right",
             isClosable: true,
         });
         await logOut();
