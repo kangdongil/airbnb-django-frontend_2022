@@ -17,7 +17,13 @@ interface IForm {
 
 export default function LoginModal({ isOpen, onClose }:
     LoginModalProps) {
-    const { register, handleSubmit, formState: {errors} } = useForm<IForm>();
+    const { 
+        register,
+        handleSubmit,
+        formState: {errors},
+        //setValue,
+        reset,
+    } = useForm<IForm>();
     const toast = useToast();
     const queryClient = useQueryClient();
     const mutation = useMutation<
@@ -25,9 +31,6 @@ export default function LoginModal({ isOpen, onClose }:
         IUsernameLoginError,
         IUsernameLoginVariables
     >(usernameLogin, {
-        onMutate: () => {
-            console.log("mutation starting");
-        },
         onSuccess: (data) => {
             // redirect to Homepage and Welcome
             console.log("mutation is successful");
@@ -36,11 +39,8 @@ export default function LoginModal({ isOpen, onClose }:
                 status: "success",
             })
             onClose();
+            reset();
             queryClient.refetchQueries(["me"]);
-        },
-        onError: (error) => {
-            // Error Msg to Login Modal
-            console.log("mutation has an error");
         },
     });
     const onSubmit = ({username, password}: IForm) => {
@@ -110,6 +110,15 @@ export default function LoginModal({ isOpen, onClose }:
                             {errors.password?.message}
                         </Text>
                     </VStack>
+                    {mutation.isError ? (
+                        <Text
+                            color="red.500"
+                            textAlign={"center"}
+                            fontSize={"sm"}
+                        >
+                            Username or Password are wrong
+                        </Text>
+                    ): null }
                     <Button
                         isLoading={mutation.isLoading}
                         type="submit"
