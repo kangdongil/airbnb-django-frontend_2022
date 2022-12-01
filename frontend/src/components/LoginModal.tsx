@@ -1,7 +1,8 @@
-import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, VStack } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useToast, VStack } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { FaLock, FaUserNinja } from "react-icons/fa";
+import { IUsernameLoginError, IUsernameLoginSuccess, IUsernameLoginVariables, usernameLogin } from "../routes/api";
 import SocialLogin from "./SocialLogin";
 
 interface LoginModalProps {
@@ -16,11 +17,34 @@ interface IForm {
 
 export default function LoginModal({ isOpen, onClose }:
     LoginModalProps) {
-    const { register, watch, handleSubmit, formState: {errors} } = useForm<IForm>();
-    // console.log(watch());
-    const onSubmit = (data: IForm) => {
-        console.log("submitted");
-        console.log(data)
+    const { register, handleSubmit, formState: {errors} } = useForm<IForm>();
+    const toast = useToast();
+    const queryClient = useQueryClient();
+    const mutation = useMutation<
+        IUsernameLoginSuccess,
+        IUsernameLoginError,
+        IUsernameLoginVariables
+    >(usernameLogin, {
+        onMutate: () => {
+            console.log("mutation starting");
+        },
+        onSuccess: (data) => {
+            // redirect to Homepage and Welcome
+            console.log("mutation is successful");
+            toast({
+                title: "welcome back!",
+                status: "success",
+            })
+            onClose();
+            queryClient.refetchQueries(["me"]);
+        },
+        onError: (error) => {
+            // Error Msg to Login Modal
+            console.log("mutation has an error");
+        },
+    });
+    const onSubmit = ({username, password}: IForm) => {
+        mutation.mutate({ username, password });
     };
     return(
         <Modal
@@ -87,6 +111,7 @@ export default function LoginModal({ isOpen, onClose }:
                         </Text>
                     </VStack>
                     <Button
+                        isLoading={mutation.isLoading}
                         type="submit"
                         mt={4}
                         colorScheme={"red"}
