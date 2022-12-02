@@ -1,8 +1,10 @@
-import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, useToast, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaLock, FaUserNinja } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
 import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { IUsernameLoginError, IUsernameLoginSuccess, IUsernameLoginVariables, usernameLogin } from "../routes/api";
 
 interface LoginModalProps {
     isOpen: boolean;
@@ -20,10 +22,32 @@ export default function LoginModal({ isOpen, onClose }:
         handleSubmit,
         formState: {errors}
     } = useForm<ILoginModalForm>();
-    const onSubmit = (data: ILoginModalForm) => {
-        console.log(data);
-    }
-    console.log(errors);
+    const toast = useToast();
+    const queryClient = useQueryClient();
+    const mutation = useMutation<
+        IUsernameLoginSuccess,
+        IUsernameLoginError,
+        IUsernameLoginVariables
+    >(usernameLogin, {
+        onMutate: () => {
+            console.log("mutation starting");
+        },
+        onSuccess: (data) => {
+            toast({
+                title: "Welcome Back!",
+                status: "success",
+            });
+            onClose();
+            queryClient.refetchQueries(["me"]);
+        },
+        onError: (data) => {
+            console.log("mutation has an error");
+            console.log(data.error)
+        },
+    });
+    const onSubmit = ({ username, password }: ILoginModalForm) => {
+        mutation.mutate({ username, password })
+    };
     return(
         <Modal
         isOpen={isOpen}
@@ -89,6 +113,7 @@ export default function LoginModal({ isOpen, onClose }:
                         </Text>
                     </VStack>
                     <Button
+                        isLoading={mutation.isLoading}
                         mt={4}
                         w="100%"
                         colorScheme={"red"}
