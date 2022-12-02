@@ -1,5 +1,6 @@
-import { Avatar, Box, Button, HStack, IconButton, LightMode, Menu, MenuButton, MenuItem, MenuList, Stack, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
+import { Avatar, Box, Button, HStack, IconButton, LightMode, Menu, MenuButton, MenuItem, MenuList, Stack, ToastId, useColorMode, useColorModeValue, useDisclosure, useToast } from "@chakra-ui/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
 import { FaAirbnb, FaMoon, FaSun } from "react-icons/fa";
 import useUser from "../lib/useUser";
 import { logOut } from "../routes/api";
@@ -17,22 +18,34 @@ export default function Header() {
     const Icon = useColorModeValue(FaMoon, FaSun);
     const toast = useToast();
     const queryClient = useQueryClient()
+    const toastId = useRef<ToastId>();
+    const mutation = useMutation(
+        logOut,
+        {
+            onMutate: () => {
+                toastId.current = toast({
+                    title: "Good Bye",
+                    description: "Sad to see you go :(",
+                    status: "info",
+                    position: "bottom-right",
+                    isClosable: true,
+                });
+            },
+            onSuccess: () => {
+                if (toastId.current) {
+                    queryClient.refetchQueries(["me"]);
+                    toast.update(toastId.current, {
+                        status: "success",
+                        title:"Done!",
+                        description: "See you later!",
+                        isClosable: true,
+                    });
+                }
+            },
+        },
+    );
     const onLogOut = async() => {
-        const toastId = toast({
-            title: "Good Bye",
-            description: "Sad to see you go :(",
-            status: "info",
-            position: "bottom-right",
-            isClosable: true,
-        });
-        await logOut();
-        queryClient.refetchQueries(["me"]);
-        toast.update(toastId, {
-            status: "success",
-            title:"Done!",
-            description: "See you later!",
-            isClosable: true,
-            });
+        mutation.mutate();
     }
     return(
         <Stack 
