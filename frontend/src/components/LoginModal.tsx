@@ -1,37 +1,29 @@
-import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react";
+import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Text, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FaLock, FaUserNinja } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
+import { useForm } from "react-hook-form";
 
 interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
 
+interface ILoginModalForm {
+    username: string;
+    password: string;
+}
+
 export default function LoginModal({ isOpen, onClose }:
     LoginModalProps) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [usernameError, setUsernameError] = useState("");
-    const onChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-        const { name, value } = event.currentTarget;
-        if (name === "username") {
-            setUsername(value);
-        } else if (name === "password") {
-            setPassword(value);
-        }
-    };
-    const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (username.length < 5) {
-            setUsernameError("Username should be longer than 5 characters.");
-        }
-        console.log({
-            "username": username,
-            "password": password,
-        });
-        // POST data to back-end
+    const { register,
+        handleSubmit,
+        formState: {errors}
+    } = useForm<ILoginModalForm>();
+    const onSubmit = (data: ILoginModalForm) => {
+        console.log(data);
     }
+    console.log(errors);
     return(
         <Modal
         isOpen={isOpen}
@@ -41,7 +33,10 @@ export default function LoginModal({ isOpen, onClose }:
             <ModalContent>
                 <ModalHeader>Log In</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody as="form" onSubmit={onSubmit as any}>
+                <ModalBody
+                    as="form"
+                    onSubmit={handleSubmit(onSubmit)}
+                >
                     <VStack>
                         <InputGroup>
                             <InputLeftElement children={
@@ -52,13 +47,21 @@ export default function LoginModal({ isOpen, onClose }:
                             />
                             <Input
                                 required
-                                name="username"
-                                value={username}
-                                onChange={onChange}
+                                isInvalid={Boolean(errors.username?.message)}
+                                {...register("username", {
+                                    required: "Please write a username.",
+                                })}
                                 variant={"filled"}
                                 placeholder="Username"
                             />
                         </InputGroup>
+                        <Text
+                            w="100%"
+                            fontSize={"sm"}
+                            color="red.500"
+                        >
+                            {errors.username?.message}
+                        </Text>
                         <InputGroup>
                         <InputLeftElement children={
                                 <Box color="gray.500">
@@ -68,14 +71,22 @@ export default function LoginModal({ isOpen, onClose }:
                             />
                             <Input
                                 required
-                                name="password"
+                                isInvalid={Boolean(errors.password?.message)}
+                                {...register("password", {
+                                    required: "Please write a password.",
+                                })}
                                 type="password"
-                                value={password}
-                                onChange={onChange}
                                 variant={"filled"}
                                 placeholder="Password"
                             />
                         </InputGroup>
+                        <Text
+                            w="100%"
+                            fontSize={"sm"}
+                            color="red.500"
+                        >
+                            {errors.password?.message}
+                        </Text>
                     </VStack>
                     <Button
                         mt={4}
