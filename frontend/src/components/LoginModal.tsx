@@ -12,6 +12,7 @@ export default function LoginModal({ isOpen, onClose }:
     LoginModalProps) {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [usernameError, setUsernameError] = useState("");
     const onChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
         const { name, value } = event.currentTarget;
         if (name === "username") {
@@ -20,6 +21,17 @@ export default function LoginModal({ isOpen, onClose }:
             setPassword(value);
         }
     };
+    const onSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (username.length < 5) {
+            setUsernameError("Username should be longer than 5 characters.");
+        }
+        console.log({
+            "username": username,
+            "password": password,
+        });
+        // POST data to back-end
+    }
     return(
         <Modal
         isOpen={isOpen}
@@ -29,7 +41,7 @@ export default function LoginModal({ isOpen, onClose }:
             <ModalContent>
                 <ModalHeader>Log In</ModalHeader>
                 <ModalCloseButton />
-                <ModalBody>
+                <ModalBody as="form" onSubmit={onSubmit as any}>
                     <VStack>
                         <InputGroup>
                             <InputLeftElement children={
@@ -39,6 +51,7 @@ export default function LoginModal({ isOpen, onClose }:
                             }
                             />
                             <Input
+                                required
                                 name="username"
                                 value={username}
                                 onChange={onChange}
@@ -54,6 +67,7 @@ export default function LoginModal({ isOpen, onClose }:
                             }
                             />
                             <Input
+                                required
                                 name="password"
                                 type="password"
                                 value={password}
@@ -63,7 +77,14 @@ export default function LoginModal({ isOpen, onClose }:
                             />
                         </InputGroup>
                     </VStack>
-                    <Button mt={4} colorScheme={"red"} w="100%">Log in</Button>
+                    <Button
+                        mt={4}
+                        w="100%"
+                        colorScheme={"red"}
+                        type="submit"
+                    >
+                        Log in
+                    </Button>
                     <SocialLogin />
                 </ModalBody>
             </ModalContent>
