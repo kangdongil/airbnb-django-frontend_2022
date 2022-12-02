@@ -1,4 +1,5 @@
 import { Box, Button, Input, InputGroup, InputLeftElement, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, VStack } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { FaLock, FaUserNinja } from "react-icons/fa";
 import SocialLogin from "./SocialLogin";
 
@@ -9,6 +10,16 @@ interface LoginModalProps {
 
 export default function LoginModal({ isOpen, onClose }:
     LoginModalProps) {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const onChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
+        const { name, value } = event.currentTarget;
+        if (name === "username") {
+            setUsername(value);
+        } else if (name === "password") {
+            setPassword(value);
+        }
+    };
     return(
         <Modal
         isOpen={isOpen}
@@ -28,6 +39,9 @@ export default function LoginModal({ isOpen, onClose }:
                             }
                             />
                             <Input
+                                name="username"
+                                value={username}
+                                onChange={onChange}
                                 variant={"filled"}
                                 placeholder="Username"
                             />
@@ -40,6 +54,10 @@ export default function LoginModal({ isOpen, onClose }:
                             }
                             />
                             <Input
+                                name="password"
+                                type="password"
+                                value={password}
+                                onChange={onChange}
                                 variant={"filled"}
                                 placeholder="Password"
                             />
