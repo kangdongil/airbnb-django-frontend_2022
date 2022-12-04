@@ -1,9 +1,15 @@
-import { Box, Checkbox, Container, FormControl, FormHelperText, FormLabel, Heading, Input, InputGroup, InputLeftAddon, Select, Textarea, VStack } from "@chakra-ui/react";
+import { Box, Button, Checkbox, Container, FormControl, FormHelperText, FormLabel, Grid, Heading, Input, InputGroup, InputLeftAddon, Select, Textarea, VStack } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { FaBed, FaDollarSign, FaToilet } from "react-icons/fa";
 import HostOnlyPage from "../components/HostOnlyPage";
 import ProtectedPage from "../components/ProtectedPage";
+import { getAmenities, getRoomCategories } from "./api";
+import { IAmenity, ICategory } from "../types";
 
 export default function UploadRoom() {
+    const { data:amenities, isLoading:isAmenitiesLoading } = useQuery<IAmenity[]>(["amenities"], getAmenities);
+    const { data:categories, isLoading:isCategoriesLoading } = useQuery<ICategory[]>(["categories"], getRoomCategories);
+    console.log(categories);
     return (
         <ProtectedPage>
             <HostOnlyPage>
@@ -20,7 +26,7 @@ export default function UploadRoom() {
                             Upload Room
                         </Heading>
                         <VStack
-                            spacing={5}
+                            spacing={10}
                             as="form"
                             mt={5}
                         >
@@ -78,6 +84,41 @@ export default function UploadRoom() {
                                 </Select>
                                 <FormHelperText>What kind of room are you renting?</FormHelperText>
                             </FormControl>
+                            <FormControl>
+                                <FormLabel>Category</FormLabel>
+                                <Select placeholder="--- Choose a categories ---">
+                                    {categories?.map((category) => (
+                                        <option
+                                            key={category.pk}
+                                            value={category.pk}
+                                        >
+                                            {category.name}
+                                        </option>
+                                    ))}
+                                </Select>
+                                <FormHelperText>What category desscribes your room?</FormHelperText>
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Amenities</FormLabel>
+                                <Grid
+                                    templateColumns={"1fr 1fr"}
+                                    gap={5}
+                                >
+                                    {amenities?.map((amenity) => (
+                                        <Box key={amenity.pk}>
+                                            <Checkbox>{amenity.name}</Checkbox>
+                                            <FormHelperText>{amenity.description}</FormHelperText>
+                                        </Box>
+                                    ))}
+                                </Grid>
+                            </FormControl>     
+                            <Button
+                                w="100%"
+                                colorScheme={"red"}
+                                 size="lg"
+                            >
+                                Upload Room
+                            </Button>     
                         </VStack>
                     </Container>
                 </Box>

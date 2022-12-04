@@ -82,3 +82,12 @@ instance.post(
     },
 )
 .then((response) => response.data);
+
+export const getAmenities = () => 
+    instance.get("rooms/amenities").then((response) => response.data["content"]);
+
+export const getRoomCategories = () => 
+    instance.get("categories/rooms").then((response) => response.data["content"]);
+
+export const getExperienceCategories = () => 
+    instance.get("categories/experiences").then((response) => response.data["content"]);
