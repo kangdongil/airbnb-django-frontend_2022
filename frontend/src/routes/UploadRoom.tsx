@@ -1,15 +1,33 @@
-import { Box, Button, Checkbox, Container, FormControl, FormHelperText, FormLabel, Grid, Heading, Input, InputGroup, InputLeftAddon, Select, Textarea, VStack } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { Box, Button, Checkbox, Container, FormControl, FormHelperText, FormLabel, Grid, Heading, Input, InputGroup, InputLeftAddon, Select, Text, Textarea, useToast, VStack } from "@chakra-ui/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { FaBed, FaDollarSign, FaToilet } from "react-icons/fa";
 import HostOnlyPage from "../components/HostOnlyPage";
 import ProtectedPage from "../components/ProtectedPage";
-import { getAmenities, getRoomCategories } from "./api";
-import { IAmenity, ICategory } from "../types";
+import { getAmenities, getRoomCategories, IUploadRoomVariables, uploadRoom } from "./api";
+import { IAmenity, ICategory, IRoomDetail } from "../types";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 
 export default function UploadRoom() {
-    const { data:amenities, isLoading:isAmenitiesLoading } = useQuery<IAmenity[]>(["amenities"], getAmenities);
-    const { data:categories, isLoading:isCategoriesLoading } = useQuery<ICategory[]>(["categories"], getRoomCategories);
-    console.log(categories);
+    const { register, handleSubmit } = useForm<IUploadRoomVariables>();
+    const toast = useToast();
+    const navigate = useNavigate();
+    const mutation = useMutation(uploadRoom, {
+        onSuccess: (data: IRoomDetail) => {
+            toast({
+                status: "success",
+                title: "Room created",
+                position: "bottom-right",
+            });
+            navigate(`/rooms/${data.id}`);
+        }
+        
+    });
+    const { data:amenities } = useQuery<IAmenity[]>(["amenities"], getAmenities);
+    const { data:categories } = useQuery<ICategory[]>(["categories"], getRoomCategories);
+    const onSubmit = (data:IUploadRoomVariables) => {
+        mutation.mutate(data);
+    }
     return (
         <ProtectedPage>
             <HostOnlyPage>
@@ -29,64 +47,106 @@ export default function UploadRoom() {
                             spacing={10}
                             as="form"
                             mt={5}
+                            onSubmit={handleSubmit(onSubmit)}
                         >
                             <FormControl>
                                 <FormLabel>Name</FormLabel>
-                                <Input type="text" />
+                                <Input
+                                    {...register("name", { required: true })}
+                                    required
+                                    type="text"
+                                />
                                 <FormHelperText>Write the name of your room.</FormHelperText>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Country</FormLabel>
-                                <Input required type="text" />
+                                <Input
+                                    {...register("country", { required: true })}
+                                    required
+                                    type="text"
+                                />
                             </FormControl>
                             <FormControl>
                                 <FormLabel>City</FormLabel>
-                                <Input required type="text" />
+                                <Input
+                                    {...register("city", { required: true })}
+                                    required
+                                    type="text"
+                                />
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Address</FormLabel>
-                                <Input required type="text" />
+                                <Input
+                                    {...register("address", { required: true })}
+                                    required
+                                    type="text"
+                                />
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Price</FormLabel>
                                 <InputGroup>
                                     <InputLeftAddon children={<FaDollarSign />} />
-                                    <Input type="number" min={0} />
+                                    <Input
+                                        {...register("price", { required: true })}
+                                        required
+                                        type="number"
+                                        min={0}
+                                    />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
-                                <FormLabel>Beds</FormLabel>
+                                <FormLabel>rooms</FormLabel>
                                 <InputGroup>
                                     <InputLeftAddon children={<FaBed />} />
-                                    <Input type="number" min={0} />
+                                    <Input
+                                        {...register("rooms", { required: true })}
+                                        required
+                                        type="number"
+                                        min={0}
+                                    />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Toilets</FormLabel>
                                 <InputGroup>
                                     <InputLeftAddon children={<FaToilet />} />
-                                    <Input type="number" min={0} />
+                                    <Input
+                                        {...register("toilets", { required: true })}
+                                        required
+                                        type="number"
+                                        min={0}
+                                    />
                                 </InputGroup>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Description</FormLabel>
-                                <Textarea />
+                                <Textarea
+                                    {...register("description", { required: true })}
+                                />
                             </FormControl>
                             <FormControl>
-                                <Checkbox>Pet friendly?</Checkbox>
+                                <Checkbox
+                                    {...register("pet_friendly", { required: true })}
+                                >Pet friendly?</Checkbox>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Kind of room</FormLabel>
-                                <Select placeholder="--- Choose a kind ---">
-                                    <option value="entire_place">Entire Place</option>
-                                    <option value="private_room">Private Room</option>
-                                    <option value="shared_room">Shared Room</option>
+                                <Select
+                                    {...register("kind", { required: true })}
+                                    placeholder="--- Choose a kind ---"
+                                >
+                                    <option value="entire place">Entire Place</option>
+                                    <option value="private room">Private Room</option>
+                                    <option value="shared room">Shared Room</option>
                                 </Select>
                                 <FormHelperText>What kind of room are you renting?</FormHelperText>
                             </FormControl>
                             <FormControl>
                                 <FormLabel>Category</FormLabel>
-                                <Select placeholder="--- Choose a categories ---">
+                                <Select
+                                    {...register("category", { required: true })}
+                                    placeholder="--- Choose a categories ---"
+                                >
                                     {categories?.map((category) => (
                                         <option
                                             key={category.pk}
@@ -105,14 +165,28 @@ export default function UploadRoom() {
                                     gap={5}
                                 >
                                     {amenities?.map((amenity) => (
-                                        <Box key={amenity.pk}>
-                                            <Checkbox>{amenity.name}</Checkbox>
+                                        <Box key={amenity.id}>
+                                            <Checkbox
+                                                value={amenity.id}
+                                                {...register("amenities", { required: true })}
+                                            >
+                                                {amenity.name}
+                                            </Checkbox>
                                             <FormHelperText>{amenity.description}</FormHelperText>
                                         </Box>
                                     ))}
                                 </Grid>
-                            </FormControl>     
+                            </FormControl>
+                            {mutation.isError ? (
+                                <Text
+                                    color="red.500"
+                                >
+                                    Something went wrong
+                                </Text>
+                            ) : null}
                             <Button
+                                type="submit"
+                                isLoading={mutation.isLoading}
                                 w="100%"
                                 colorScheme={"red"}
                                  size="lg"
