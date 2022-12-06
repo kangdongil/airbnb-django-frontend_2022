@@ -8,7 +8,6 @@ import { getRooms } from "./api";
 export default function Home() {
 
     const { isLoading, data } = useQuery<IRoomList[]>(["rooms"], getRooms);
-    console.log(data);
     return (
         <Grid
             mt={10}
@@ -38,8 +37,9 @@ export default function Home() {
             ) : null}
             {data?.map((room) => (
                 <Room
-                    key={room.id}
-                    pk={room.id}
+                    key={room.pk}
+                    pk={room.pk}
+                    isOwner={room.is_owner}
                     imageUrl={room.preview_photo?.file}
                     name={room.name}
                     city={room.city}

@@ -19,7 +19,7 @@ export default function UploadRoom() {
                 title: "Room created",
                 position: "bottom-right",
             });
-            navigate(`/rooms/${data.id}`);
+            navigate(`/rooms/${data.pk}`);
         }
         
     });

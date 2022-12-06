@@ -5,7 +5,7 @@ export interface IRoomPhoto {
 }
 
 export interface IRoomList {
-    id: number;
+    pk: number;
     name: string;
     country: string;
     city: string;
