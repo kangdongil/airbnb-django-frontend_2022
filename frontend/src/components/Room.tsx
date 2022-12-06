@@ -36,6 +36,7 @@ export default function Room({
                 >
                     {imageUrl ? (
                         <Image
+                            objectFit={"cover"}
                             minH="280"
                             src={imageUrl}
                         />

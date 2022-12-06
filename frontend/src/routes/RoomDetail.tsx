@@ -16,7 +16,7 @@ export default function RoomDetail() {
         ["rooms", roomPk, "reviews"],
         getRoomReviews,
     );
-
+    console.log(data);
     return <Box
         mt={10}
         px={{
@@ -45,7 +45,7 @@ export default function RoomDetail() {
                     rowSpan={index === 0 ? 2:1}
                 >
                     <Skeleton isLoaded={!isLoading} h="100%" w="100%">
-                        {data?.photos && data.photos.length > 0 ? (
+                        {data?.photos && data.photos.length > 4 ? (
                             <Image
                                 w="100%"
                                 h="100%"
