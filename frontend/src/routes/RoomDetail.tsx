@@ -7,6 +7,7 @@ import "react-calendar/dist/Calendar.css";
 import { IReview, IRoomDetail } from "../types";
 import { checkBooking, getRoom, getRoomReviews } from "./api";
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 
 export default function RoomDetail() {
     const { roomPk } = useParams();
@@ -35,6 +36,9 @@ export default function RoomDetail() {
             lg: 40,
         }}
     >
+        <Helmet>
+            <title>{data ? data?.name : "Loading..."}</title>
+        </Helmet>
         <Skeleton h={"43px"} isLoaded={!isLoading}>
             <Heading>{data?.name}</Heading>
         </Skeleton>
