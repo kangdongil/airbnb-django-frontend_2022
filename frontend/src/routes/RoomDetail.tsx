@@ -6,8 +6,9 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { IReview, IRoomDetail } from "../types";
 import { checkBooking, getRoom, getRoomReviews } from "./api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Helmet } from "react-helmet";
+import "../calendar.css";
 
 export default function RoomDetail() {
     const { roomPk } = useParams();
@@ -164,6 +165,8 @@ export default function RoomDetail() {
                 lg: 20,
             }}>
                 <Calendar
+                    goToRangeStartOnSelect
+                    
                     onChange={setDates}
                     minDate={new Date()}
                     maxDate={new Date(Date.now() + (60*60*24*7*4*6*1000))}
