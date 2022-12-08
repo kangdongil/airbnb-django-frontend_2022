@@ -1,11 +1,11 @@
-import { Avatar, Box, Container, Grid, GridItem, Heading, HStack, Image, Skeleton, Text, VStack } from "@chakra-ui/react";
+import { Avatar, Box, Button, Container, Grid, GridItem, Heading, HStack, Image, Skeleton, Text, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { FaStar } from "react-icons/fa";
 import { useParams } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { IReview, IRoomDetail } from "../types";
-import { getRoom, getRoomReviews } from "./api";
+import { checkBooking, getRoom, getRoomReviews } from "./api";
 import { useEffect, useState } from "react";
 
 export default function RoomDetail() {
@@ -14,20 +14,20 @@ export default function RoomDetail() {
         ["rooms", roomPk],
         getRoom,
     );
-    const { isLoading: isReviewLoading, data: reviewsData } =
+    const [dates ,setDates] = useState<Date[]>();
+    const {data: checkBookingData, isLoading: isCheckingBooking, refetch } = useQuery(
+        ["check", roomPk, dates],
+        checkBooking, {
+            cacheTime: 0,
+            enabled: dates !== undefined,
+        }
+    );
+    const { data: reviewsData } =
     useQuery<IReview[]>(
         ["rooms", roomPk, "reviews"],
         getRoomReviews,
     );
-    const [dates ,setDates] = useState<Date[]>();
-    useEffect(() => {
-        if (dates) {
-            const [firstDate, secondDate] = dates;
-            const [checkIn] = firstDate.toJSON().split("T");
-            const [checkOut] = secondDate.toJSON().split("T");
-            console.log(checkIn, checkOut);
-        }
-    }, [dates]);
+    console.log(checkBookingData, isCheckingBooking)
     return <Box
         mt={10}
         px={{
@@ -168,6 +168,17 @@ export default function RoomDetail() {
                     next2Label={null}
                     selectRange
                 />
+                <Button
+                    disabled={!checkBookingData?.ok}
+                    w="100%"
+                    mt={5}
+                    colorScheme={"red"}
+                >
+                    Make Booking
+                </Button>
+                {!isCheckingBooking && !checkBookingData?.ok ? (
+                    <Text color="red.500">Can't book on those dates</Text>
+                ) : null}
             </Box>
         </Grid>
 
