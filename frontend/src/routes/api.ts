@@ -3,9 +3,13 @@ import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
 import { formatDate } from "../lib/utils";
 
+const GP_BACKEND_NAME = process.env.REACT_APP_GITPOD_BACKEND_NAME
+const GP_SUBDOMAIN = process.env.REACT_APP_GITPOD_SUBDOMAIN
 
 const instance = axios.create({
-    baseURL: "https://8000-kangdongil-gpreactdjang-ijumdskuh65.ws-us77.gitpod.io/api/v1/",
+    baseURL: process.env.NODE_ENV === "development"
+        ? `https://${GP_BACKEND_NAME}.${GP_SUBDOMAIN}.gitpod.io/api/v1/`
+        : "https://airbnbclone-uk8m.onrender.com/api/v1/",
     withCredentials: true,
 })
 
