@@ -10,6 +10,7 @@ import SignUpModal from "./SignUpModal";
 
 export default function Header() {
     const { userLoading, isLoggedIn, user } = useUser();
+    console.log(userLoading, isLoggedIn, user);
     const { isOpen: isLoginOpen, onClose:onLoginClose,
         onOpen: onLoginOpen } = useDisclosure();
     const { isOpen: isSignUpOpen, onClose:onSignUpClose,

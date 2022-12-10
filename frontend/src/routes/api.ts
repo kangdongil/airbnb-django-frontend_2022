@@ -9,7 +9,7 @@ const GP_SUBDOMAIN = process.env.REACT_APP_GITPOD_SUBDOMAIN
 const instance = axios.create({
     baseURL: process.env.NODE_ENV === "development"
         ? `https://${GP_BACKEND_NAME}.${GP_SUBDOMAIN}.gitpod.io/api/v1/`
-        : "https://airbnbclone-uk8m.onrender.com/api/v1/",
+        : "https://backend.noru-place.xyz/api/v1/",
     withCredentials: true,
 })
 
@@ -82,7 +82,7 @@ instance.post(
     { username, password },
     {
         headers: {
-            "X-CSRFToken": Cookie.get("csrftoken") || "",
+            "X-CSRFToken": Cookie.get("csrftoken") || "asdf",
         },
     },
 )

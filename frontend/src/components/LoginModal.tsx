@@ -33,7 +33,6 @@ export default function LoginModal({ isOpen, onClose }:
     >(usernameLogin, {
         onSuccess: (data) => {
             // redirect to Homepage and Welcome
-            console.log("mutation is successful");
             toast({
                 title: "welcome back!",
                 status: "success",
